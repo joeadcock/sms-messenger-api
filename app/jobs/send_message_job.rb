@@ -7,11 +7,16 @@ class SendMessageJob < ApplicationJob
     }
 
     client = Twilio::REST::Client.new account_sid, auth_token
-    resp = client.messages.create(
+    twilio_response = client.messages.create(
       from: twilio_phone,
       to: message.phone,
       body: message.message
     )
-    Rails.logger.info("Twilio response: #{resp.inspect}")
+
+    message.update! sent_at: Datetime.now,
+                    sid: twilio_response.sid,
+                    status: twilio_response.status
+
+    Rails.logger.info("Twilio response: #{twilio_response.inspect}")
   end
 end
