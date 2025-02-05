@@ -13,7 +13,7 @@ class SendMessageJob < ApplicationJob
       body: message.message
     )
 
-    message.update! sent_at: Datetime.now,
+    message.update! sent_at: DateTime.now,
                     sid: twilio_response.sid,
                     status: twilio_response.status
 
